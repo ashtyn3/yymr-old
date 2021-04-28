@@ -39,12 +39,22 @@ int main() {
   newCPU.memory[i++] = 0x0003;
   newCPU.memory[i++] = 0x0000;
 
+  int count = 1;
   while (true) {
     getchar();
     newCPU.step();
+    if (newCPU.getRegister(ip) == 0) {
+      std::cout << "\nJUMPED TO START: " << count << std::endl;
+      count = 0;
+    }
+
     log(newCPU);
     std::cout << "Memory at address 20: " << unsigned(newCPU.memory[20])
               << std::endl;
+    count++;
+    if (newCPU.getRegister(ip) == 12 && newCPU.memory[20] == 0x0003) {
+      std::cout << "\nDONE: " << count << std::endl;
+    }
   }
   return 0;
 }
