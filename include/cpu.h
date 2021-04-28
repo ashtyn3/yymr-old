@@ -19,7 +19,7 @@ enum registers {
 class CPU {
 public:
   uint16_t reg[10];
-  std::vector<uint16_t> memory;
+  std::vector<uint8_t> memory;
   uint8_t readMemory(int address);
   void initMemory(int size = 20);
   uint16_t getRegister(int address);

@@ -1,16 +1,50 @@
 #include "../include/cpu.h"
+#include "../include/opcodes.h"
 #include <iostream>
+
+void log(CPU cpu) {
+  for (int i = 0; i < 10; i++) {
+    if (i == 0) {
+      std::cout << "IP: " << unsigned(cpu.getRegister(i)) << std::endl;
+    } else if (i == 1) {
+      std::cout << "ACC: " << unsigned(cpu.getRegister(i)) << std::endl;
+    } else {
+      std::cout << "R" << i - 1 << ": " << unsigned(cpu.getRegister(i))
+                << std::endl;
+    }
+  }
+}
 
 int main() {
   CPU newCPU;
   newCPU.initMemory();
-  newCPU.memory[0] = 0x10;
-  newCPU.memory[1] = 0x00;
-  newCPU.memory[2] = 0x01; // 0x0001
-  newCPU.memory[3] = 0x02;
+  int i = 0;
+  newCPU.memory[i++] = MOV_LIT_REG;
+  newCPU.memory[i++] = 0x0001;
+  newCPU.memory[i++] = r1;
 
-  newCPU.step();
-  // uint8_t num = newCPU.fetch();
-  std::cout << unsigned(newCPU.getRegister(r1));
+  newCPU.memory[i++] = MOV_MEM_REG;
+  newCPU.memory[i++] = 0x00014;
+  newCPU.memory[i++] = r2;
+
+  newCPU.memory[i++] = ADD_REG_REG;
+  newCPU.memory[i++] = r1;
+  newCPU.memory[i++] = r2;
+
+  newCPU.memory[i++] = MOV_REG_MEM;
+  newCPU.memory[i++] = acc;
+  newCPU.memory[i++] = 0x00014;
+
+  newCPU.memory[i++] = JMP_NOT_EQ;
+  newCPU.memory[i++] = 0x0003;
+  newCPU.memory[i++] = 0x0000;
+
+  while (true) {
+    getchar();
+    newCPU.step();
+    log(newCPU);
+    std::cout << "Memory at address 20: " << unsigned(newCPU.memory[20])
+              << std::endl;
+  }
   return 0;
 }

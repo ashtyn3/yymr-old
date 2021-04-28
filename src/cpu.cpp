@@ -1,4 +1,5 @@
 #include "../include/cpu.h"
+#include "../include/opcodes.h"
 #include <array>
 #include <iostream>
 
@@ -41,29 +42,65 @@ void CPU::setRegister(int address, uint16_t value) {
   reg[address] = value;
 }
 
+uint8_t split(uint16_t i) { return i & 0xff; }
+
 uint8_t CPU::fetch() {
   int currentPointer = CPU::getRegister(ip);
   uint8_t pointer = CPU::readMemory(currentPointer);
   CPU::setRegister(ip, currentPointer + 1);
-  return pointer;
+  return split(pointer);
 }
 
 uint16_t CPU::fetch16() {
   int currentPointer = CPU::getRegister(ip);
   uint8_t p1 = CPU::readMemory(currentPointer);
-  uint8_t p2 = CPU::readMemory(currentPointer + 1);
-  uint16_t pointer = mergeNumbers(p1, p2);
-  CPU::setRegister(ip, currentPointer + 2);
-
-  return pointer;
+  CPU::setRegister(ip, currentPointer + 1);
+  return p1;
 }
 
 void CPU::execute(uint8_t current) {
   switch (current) {
-  case 0x10: {
+  case MOV_LIT_REG: {
     uint16_t lit = fetch16();
     uint8_t reg = fetch();
     CPU::setRegister(reg, lit);
+    break;
+  }
+  case MOV_REG_REG: {
+    uint8_t regFrom = fetch();
+    uint8_t regTo = fetch();
+    uint16_t value = CPU::getRegister(regFrom);
+    CPU::setRegister(regFrom, value);
+    break;
+  }
+  case MOV_REG_MEM: {
+    uint8_t regFrom = fetch();
+    uint16_t address = fetch16();
+    uint16_t value = CPU::getRegister(regFrom);
+    // uint8_t chunks = split(value);
+    memory[address] = value;
+    break;
+  }
+  case MOV_MEM_REG: {
+    uint16_t address = fetch16();
+    uint8_t regTo = fetch();
+    CPU::setRegister(regTo, memory[address]);
+    break;
+  }
+  case ADD_REG_REG: {
+    uint8_t reg1 = fetch();
+    uint8_t reg2 = fetch();
+    uint16_t value1 = CPU::getRegister(reg1);
+    uint16_t value2 = CPU::getRegister(reg2);
+    CPU::setRegister(acc, value1 + value2);
+    break;
+  }
+  case JMP_NOT_EQ: {
+    uint8_t value = fetch16();
+    uint8_t pointer = fetch16();
+    if (value != CPU::getRegister(acc)) {
+      CPU::setRegister(ip, pointer);
+    }
   }
   }
 }
