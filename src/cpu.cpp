@@ -101,6 +101,47 @@ void CPU::execute(uint8_t current) {
     if (value != CPU::getRegister(acc)) {
       CPU::setRegister(ip, pointer);
     }
+    break;
+  }
+  case JMP_EQ: {
+    uint8_t value = fetch16();
+    uint8_t pointer = fetch16();
+    if (value != CPU::getRegister(acc)) {
+      CPU::setRegister(ip, pointer);
+    }
+    break;
+  }
+  case JMP_LESS_EQ: {
+    uint8_t value = fetch16();
+    uint8_t pointer = fetch16();
+    if (value <= CPU::getRegister(acc)) {
+      CPU::setRegister(ip, pointer);
+    }
+    break;
+  }
+  case JMP_LESS: {
+    uint8_t value = fetch16();
+    uint8_t pointer = fetch16();
+    if (value < CPU::getRegister(acc)) {
+      CPU::setRegister(ip, pointer);
+    }
+    break;
+  }
+  case JMP_GREATER_EQ: {
+    uint8_t value = fetch16();
+    uint8_t pointer = fetch16();
+    if (value >= CPU::getRegister(acc)) {
+      CPU::setRegister(ip, pointer);
+    }
+    break;
+  }
+  case JMP_GREATER: {
+    uint8_t value = fetch16();
+    uint8_t pointer = fetch16();
+    if (value > CPU::getRegister(acc)) {
+      CPU::setRegister(ip, pointer);
+    }
+    break;
   }
   }
 }

@@ -4,5 +4,10 @@ enum opcodes {
   MOV_REG_MEM = 0x12,
   MOV_MEM_REG = 0x13,
   ADD_REG_REG = 0x14,
-  JMP_NOT_EQ = 0x21
+  JMP_NOT_EQ = 0x21,
+  JMP_EQ = 0x22,
+  JMP_LESS_EQ = 0x23,
+  JMP_LESS = 0x24,
+  JMP_GREATER_EQ = 0x25,
+  JMP_GREATER = 0x26,
 };
