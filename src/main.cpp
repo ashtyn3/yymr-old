@@ -16,7 +16,7 @@ void log(CPU cpu) {
 }
 
 int main() {
-  CPU newCPU;
+  CPU newCPU(256 * 256);
   newCPU.initMemory();
   int i = 0;
   newCPU.memory[i++] = MOV_LIT_REG;

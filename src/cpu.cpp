@@ -16,8 +16,8 @@ uint8_t CPU::readMemory(int address) {
   return memory[address];
 }
 
-void CPU::initMemory(int size) {
-  for (int i = 0; i < size; i++) {
+void CPU::initMemory() {
+  for (int i = 0; i < memoryLimit; i++) {
     memory.push_back(0x00);
   }
   for (int i = 0; i < 11; i++) {

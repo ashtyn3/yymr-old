@@ -18,10 +18,12 @@ enum registers {
 
 class CPU {
 public:
+  CPU(int limit) { memoryLimit = limit; }
+  int memoryLimit;
   uint16_t reg[10];
   std::vector<uint8_t> memory;
   uint8_t readMemory(int address);
-  void initMemory(int size = 20);
+  void initMemory();
   uint16_t getRegister(int address);
   void setRegister(int address, uint16_t value);
   uint8_t fetch();
