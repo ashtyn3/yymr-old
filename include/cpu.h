@@ -26,7 +26,8 @@ public:
   void setRegister(int address, uint16_t value);
   uint8_t fetch();
   uint16_t fetch16();
-  void execute();
+  void execute(uint8_t current);
+  void step();
 };
 
 #endif

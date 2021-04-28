@@ -50,12 +50,25 @@ uint8_t CPU::fetch() {
 
 uint16_t CPU::fetch16() {
   int currentPointer = CPU::getRegister(ip);
-  uint8_t p1 = memory[currentPointer];
-  uint8_t p2 = memory[currentPointer + 1];
+  uint8_t p1 = CPU::readMemory(currentPointer);
+  uint8_t p2 = CPU::readMemory(currentPointer + 1);
   uint16_t pointer = mergeNumbers(p1, p2);
   CPU::setRegister(ip, currentPointer + 2);
 
   return pointer;
 }
 
-void CPU::execute() {}
+void CPU::execute(uint8_t current) {
+  switch (current) {
+  case 0x10: {
+    uint16_t lit = fetch16();
+    uint8_t reg = fetch();
+    CPU::setRegister(reg, lit);
+  }
+  }
+}
+
+void CPU::step() {
+  uint8_t instruction = CPU::fetch();
+  CPU::execute(instruction);
+}
