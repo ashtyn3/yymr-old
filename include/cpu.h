@@ -35,8 +35,9 @@ public:
   void setRegister(int address, uint16_t value);
   uint8_t fetch();
   uint16_t fetch16();
-  void execute(uint8_t current);
-  void step();
+  uint8_t execute(uint8_t current);
+  uint8_t step();
+  void run();
 };
 
 #endif

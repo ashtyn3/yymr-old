@@ -112,7 +112,7 @@ uint16_t CPU::fetch16() {
   return p1;
 }
 
-void CPU::execute(uint8_t current) {
+uint8_t CPU::execute(uint8_t current) {
   switch (current) {
   case MOV_LIT_REG: {
     uint16_t lit = fetch16();
@@ -232,10 +232,21 @@ void CPU::execute(uint8_t current) {
     CPU::popState();
     break;
   }
+  case HLT: {
+    return 1;
   }
+  }
+  return 0;
 }
 
-void CPU::step() {
+uint8_t CPU::step() {
   uint8_t instruction = CPU::fetch();
-  CPU::execute(instruction);
+  return CPU::execute(instruction);
+}
+
+void CPU::run() {
+  uint8_t halt = CPU::step();
+  if (halt != 0) {
+    CPU::run();
+  }
 }

@@ -16,4 +16,5 @@ enum opcodes {
   CAL_LIT = 0x34,
   CAL_REG = 0x35,
   RET = 0x36,
+  HLT = 0x40,
 };
