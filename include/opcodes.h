@@ -10,4 +10,10 @@ enum opcodes {
   JMP_LESS = 0x24,
   JMP_GREATER_EQ = 0x25,
   JMP_GREATER = 0x26,
+  PSH_LIT = 0x31,
+  PSH_REG = 0x32,
+  POP = 0x33,
+  CAL_LIT = 0x34,
+  CAL_REG = 0x35,
+  RET = 0x36,
 };

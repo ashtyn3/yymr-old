@@ -20,13 +20,53 @@ void CPU::initMemory() {
   for (int i = 0; i < memoryLimit; i++) {
     memory.push_back(0x00);
   }
-  for (int i = 0; i < 11; i++) {
+  for (int i = 0; i < 12; i++) {
     reg[i] = 0x0000;
   }
+  reg[sp] = 0x100;
+  reg[fp] = 0x100;
+}
+
+void CPU::pushState() {
+  CPU::push(CPU::getRegister(r1));
+  CPU::push(CPU::getRegister(r2));
+  CPU::push(CPU::getRegister(r3));
+  CPU::push(CPU::getRegister(r4));
+  CPU::push(CPU::getRegister(r5));
+  CPU::push(CPU::getRegister(r6));
+  CPU::push(CPU::getRegister(r7));
+  CPU::push(CPU::getRegister(r8));
+  CPU::push(CPU::getRegister(ip));
+  CPU::push(CPU::stackFrameSize + 1);
+
+  CPU::setRegister(fp, CPU::getRegister(sp));
+  CPU::stackFrameSize = 0;
+}
+
+void CPU::popState() {
+  uint16_t framePointer = CPU::getRegister(fp);
+  CPU::setRegister(sp, framePointer);
+  CPU::stackFrameSize = CPU::pop();
+  uint16_t stackStateSize = CPU::stackFrameSize;
+  CPU::setRegister(ip, pop());
+  CPU::setRegister(r8, CPU::pop());
+  CPU::setRegister(r7, CPU::pop());
+  CPU::setRegister(r6, CPU::pop());
+  CPU::setRegister(r5, CPU::pop());
+  CPU::setRegister(r4, CPU::pop());
+  CPU::setRegister(r3, CPU::pop());
+  CPU::setRegister(r2, CPU::pop());
+  CPU::setRegister(r1, CPU::pop());
+
+  uint16_t nArgs = CPU::pop();
+  for (int i = 0; i < nArgs; i++) {
+    CPU::pop();
+  }
+  CPU::setRegister(fp, framePointer + stackStateSize);
 }
 
 uint16_t CPU::getRegister(int address) {
-  if (address > 9) {
+  if (address > 11) {
     std::cerr << "Cannot get register: " << address << std::endl;
     return 0;
   }
@@ -35,7 +75,7 @@ uint16_t CPU::getRegister(int address) {
 }
 
 void CPU::setRegister(int address, uint16_t value) {
-  if (address > 9) {
+  if (address > 11) {
     std::cerr << "Cannot set register: " << address << std::endl;
     return;
   }
@@ -43,6 +83,20 @@ void CPU::setRegister(int address, uint16_t value) {
 }
 
 uint8_t split(uint16_t i) { return i & 0xff; }
+
+void CPU::push(uint16_t lit) {
+  uint16_t stackPointer = CPU::getRegister(sp);
+  CPU::memory[stackPointer] = lit;
+  CPU::setRegister(sp, stackPointer - 1);
+  CPU::stackFrameSize += 1;
+}
+
+uint16_t CPU::pop() {
+  uint16_t stackPointer = CPU::getRegister(sp) + 1;
+  CPU::setRegister(sp, stackPointer);
+  CPU::stackFrameSize -= 1;
+  return CPU::memory[stackPointer];
+}
 
 uint8_t CPU::fetch() {
   int currentPointer = CPU::getRegister(ip);
@@ -141,6 +195,41 @@ void CPU::execute(uint8_t current) {
     if (value > CPU::getRegister(acc)) {
       CPU::setRegister(ip, pointer);
     }
+    break;
+  }
+  case PSH_LIT: {
+    uint16_t val = fetch16();
+    push(val);
+    break;
+  }
+  case PSH_REG: {
+    uint16_t registerIndex = fetch();
+    uint16_t val = CPU::getRegister(registerIndex);
+    push(val);
+    break;
+  }
+  case POP: {
+    uint16_t index = fetch16();
+    uint16_t value = pop();
+    CPU::setRegister(index, value);
+    break;
+  }
+  case CAL_LIT: {
+    uint16_t address = fetch16();
+
+    CPU::pushState();
+    CPU::setRegister(ip, address);
+    break;
+  }
+  case CAL_REG: {
+    uint8_t pointer = fetch16();
+    uint16_t address = CPU::getRegister(pointer);
+    CPU::pushState();
+    CPU::setRegister(ip, address);
+    break;
+  }
+  case RET: {
+    CPU::popState();
     break;
   }
   }

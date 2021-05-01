@@ -13,17 +13,24 @@ enum registers {
   r5 = 6,
   r6 = 7,
   r7 = 8,
-  r8 = 9
+  r8 = 9,
+  sp = 10,
+  fp = 11,
 };
 
 class CPU {
 public:
   CPU(int limit) { memoryLimit = limit; }
   int memoryLimit;
-  uint16_t reg[10];
+  uint8_t stackFrameSize;
+  uint16_t reg[12];
   std::vector<uint8_t> memory;
   uint8_t readMemory(int address);
   void initMemory();
+  void pushState();
+  void popState();
+  void push(uint16_t lit);
+  uint16_t pop();
   uint16_t getRegister(int address);
   void setRegister(int address, uint16_t value);
   uint8_t fetch();
