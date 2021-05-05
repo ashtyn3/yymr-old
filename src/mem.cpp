@@ -1,20 +1,20 @@
 #include "../include/mem.h"
 #include "../include/mapper.h"
+#include <iostream>
 
-MemoryDriver *parent;
-MemoryDriver::Controller::Controller(MemoryDriver *item) : parent(item) {}
-uint16_t MemoryDriver::Controller::getUint16(uint16_t address) {
-  return parent->memory[address];
+uint8_t splitBytes(uint16_t i) { return i & 0xff; }
+
+uint16_t MemoryDriver::getUint16(uint16_t address) { return memory[address]; };
+
+uint8_t MemoryDriver::getUint8(uint16_t address) {
+  std::cout << memory.size() << std::endl;
+  return splitBytes(memory[address]);
 };
 
-uint8_t MemoryDriver::Controller::getUint8(uint16_t address) {
-  return parent->memory[address] & 0x00ff;
+void MemoryDriver::setUint8(uint16_t address, uint8_t value) {
+  memory[address] = value;
 };
 
-void MemoryDriver::Controller::setUint8(uint16_t address, uint8_t value) {
-  parent->memory[address] = value & 0xff;
-};
-
-void MemoryDriver::Controller::setUint16(uint16_t address, uint16_t value) {
-  parent->memory[address] = value;
+void MemoryDriver::setUint16(uint16_t address, uint16_t value) {
+  memory[address] = value;
 };

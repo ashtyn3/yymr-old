@@ -72,7 +72,7 @@ uint8_t split(uint16_t i) { return i & 0xff; }
 
 void CPU::push(uint16_t lit) {
   uint16_t stackPointer = CPU::getRegister(sp);
-  memory->setUint16(stackPointer, lit);
+  memory.setUint16(stackPointer, lit);
   CPU::setRegister(sp, stackPointer - 1);
   CPU::stackFrameSize += 1;
 }
@@ -81,19 +81,19 @@ uint16_t CPU::pop() {
   uint16_t stackPointer = CPU::getRegister(sp) + 1;
   CPU::setRegister(sp, stackPointer);
   CPU::stackFrameSize -= 1;
-  return memory->getUint16(stackPointer);
+  return memory.getUint16(stackPointer);
 }
 
 uint8_t CPU::fetch() {
   int currentPointer = CPU::getRegister(ip);
-  uint8_t pointer = memory->getUint8(currentPointer);
+  uint8_t pointer = CPU::memory.getUint8(currentPointer);
   CPU::setRegister(ip, currentPointer + 1);
   return split(pointer);
 }
 
 uint16_t CPU::fetch16() {
   int currentPointer = CPU::getRegister(ip);
-  uint8_t p1 = memory->getUint16(currentPointer);
+  uint8_t p1 = memory.getUint16(currentPointer);
   CPU::setRegister(ip, currentPointer + 1);
   return p1;
 }
@@ -118,13 +118,13 @@ uint8_t CPU::execute(uint8_t current) {
     uint16_t address = fetch16();
     uint16_t value = CPU::getRegister(regFrom);
     // uint8_t chunks = split(value);
-    memory->setUint16(address, value);
+    memory.setUint16(address, value);
     break;
   }
   case MOV_MEM_REG: {
     uint16_t address = fetch16();
     uint8_t regTo = fetch();
-    CPU::setRegister(regTo, memory->getUint16(address));
+    CPU::setRegister(regTo, memory.getUint16(address));
     break;
   }
   case ADD_REG_REG: {
@@ -219,6 +219,7 @@ uint8_t CPU::execute(uint8_t current) {
     break;
   }
   case HLT: {
+    break;
     return 1;
   }
   }

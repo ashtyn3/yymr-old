@@ -4,7 +4,7 @@ uint16_t ScreenDriver::MemoryDevice::getUint16(uint16_t address) {
   return 0x0000;
 };
 
-uint8_t ScreenDriver::MemoryDevice::getUint8(uint16_t address) {
+uint16_t ScreenDriver::MemoryDevice::getUint8(uint16_t address) {
   return 0x000;
 };
 

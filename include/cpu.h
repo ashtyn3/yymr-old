@@ -20,11 +20,11 @@ enum registers {
 
 class CPU {
 public:
-  CPU(MemoryMapper *ram) : memory(ram) {}
+  CPU(MemoryMapper ram) : memory(ram) {}
   int memoryLimit;
   uint8_t stackFrameSize;
   uint16_t reg[12];
-  MemoryMapper *memory;
+  MemoryMapper memory;
   void initReg();
   void pushState();
   void popState();
