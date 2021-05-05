@@ -1,6 +1,6 @@
-#ifndef HEADER_FILE_NAME
-#define HEADER_FILE_NAME
-#include <stdint.h>
+#ifndef cpu
+#define cpu
+#include "../include/mapper.h"
 #include <vector>
 
 enum registers {
@@ -20,13 +20,12 @@ enum registers {
 
 class CPU {
 public:
-  CPU(int limit) { memoryLimit = limit; }
+  CPU(MemoryMapper *ram) : memory(ram) {}
   int memoryLimit;
   uint8_t stackFrameSize;
   uint16_t reg[12];
-  std::vector<uint8_t> memory;
-  uint8_t readMemory(int address);
-  void initMemory();
+  MemoryMapper *memory;
+  void initReg();
   void pushState();
   void popState();
   void push(uint16_t lit);
