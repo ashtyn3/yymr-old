@@ -110,7 +110,7 @@ uint8_t CPU::execute(uint8_t current) {
     uint8_t regFrom = fetch();
     uint8_t regTo = fetch();
     uint16_t value = CPU::getRegister(regFrom);
-    CPU::setRegister(regFrom, value);
+    CPU::setRegister(regTo, value);
     break;
   }
   case MOV_REG_MEM: {

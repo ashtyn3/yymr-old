@@ -8,12 +8,24 @@ int main() {
   MemoryDriver mem(256 * 256);
   map.map(&mem, 0x0000, 0xffff, 0);
 
-  mem.memory[0] = MOV_LIT_REG;
-  mem.memory[1] = 0x0001;
-  mem.memory[2] = r1;
   CPU newCPU(map);
   newCPU.initReg();
 
+  int i = 0;
+  mem.memory[i++] = MOV_LIT_REG;
+  mem.memory[i++] = 0x0001;
+  mem.memory[i++] = r1;
+
+  mem.memory[i++] = MOV_LIT_REG;
+  mem.memory[i++] = 0x0014;
+  mem.memory[i++] = r2;
+
+  mem.memory[i++] = MOV_REG_REG;
+  mem.memory[i++] = r2;
+  mem.memory[i++] = r4;
+
+  newCPU.step();
+  newCPU.step();
   newCPU.step();
 
   std::cout << "ip: " << unsigned(newCPU.getRegister(ip)) << std::endl;
