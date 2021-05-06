@@ -9,19 +9,15 @@ struct MemoryDriver : public MemoryDevice {
 public:
   std::vector<uint16_t> memory;
   int size;
-  MemoryDriver(int size) : size(size) {
-    for (int i = 0; i < size; i++) {
-      memory.push_back(0x00);
-    }
-  };
+  MemoryDriver(int size);
 
-  uint16_t getUint16(uint16_t address);
+  uint16_t getUint16(uint16_t address) override;
 
-  uint8_t getUint8(uint16_t address);
+  uint8_t getUint8(uint16_t address) override;
 
-  void setUint8(uint16_t address, uint8_t value);
+  void setUint8(uint16_t address, uint8_t value) override;
 
-  void setUint16(uint16_t address, uint16_t value);
+  void setUint16(uint16_t address, uint16_t value) override;
 };
 
 #endif

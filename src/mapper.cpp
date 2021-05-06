@@ -1,9 +1,9 @@
 #include "../include/mapper.h"
 #include <iostream>
 
-void MemoryMapper::map(MemoryDevice device, uint16_t start, uint16_t end,
+void MemoryMapper::map(MemoryDevice *device, uint16_t start, uint16_t end,
                        uint8_t remap) {
-  MemoryRange range = {device, start, end, remap, "RAM"};
+  MemoryRange range = {device, start, end, remap};
   MemoryMapper::ranges.insert(ranges.begin(), range);
 }
 
@@ -27,7 +27,7 @@ uint16_t MemoryMapper::getUint16(uint16_t address) {
   } else {
     Final = address;
   }
-  return region.device.getUint16(Final);
+  return region.device->getUint16(Final);
 }
 
 void MemoryMapper::setUint16(uint16_t address, uint16_t value) {
@@ -39,7 +39,7 @@ void MemoryMapper::setUint16(uint16_t address, uint16_t value) {
     Final = address;
   }
 
-  region.device.setUint16(Final, value);
+  region.device->setUint16(Final, value);
 }
 
 uint8_t MemoryMapper::getUint8(uint16_t address) {
@@ -50,8 +50,7 @@ uint8_t MemoryMapper::getUint8(uint16_t address) {
   } else {
     Final = address;
   }
-  std::cout << unsigned(region.device.getUint8(0)) << std::endl;
-  return region.device.getUint8(Final) & 0xff;
+  return region.device->getUint8(Final) & 0xff;
 }
 
 void MemoryMapper::setUint8(uint16_t address, uint8_t value) {
@@ -63,5 +62,5 @@ void MemoryMapper::setUint8(uint16_t address, uint8_t value) {
     Final = address;
   }
 
-  region.device.setUint8(Final, value);
+  region.device->setUint8(Final, value);
 }

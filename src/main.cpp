@@ -1,21 +1,18 @@
 #include "../include/cpu.h"
 #include "../include/mem.h"
 #include "../include/opcodes.h"
-#include "../include/screen.h"
 #include <iostream>
 
 int main() {
   MemoryMapper map;
-  ScreenDriver screenDevice;
   MemoryDriver mem(256 * 256);
-  map.map(mem, 0x0000, 0xffff, 0);
-
-  CPU newCPU(map);
-  newCPU.initReg();
+  map.map(&mem, 0x0000, 0xffff, 0);
 
   mem.memory[0] = MOV_LIT_REG;
   mem.memory[1] = 0x0001;
   mem.memory[2] = r1;
+  CPU newCPU(map);
+  newCPU.initReg();
 
   newCPU.step();
 

@@ -86,7 +86,7 @@ uint16_t CPU::pop() {
 
 uint8_t CPU::fetch() {
   int currentPointer = CPU::getRegister(ip);
-  uint8_t pointer = CPU::memory.getUint8(currentPointer);
+  uint8_t pointer = memory.getUint8(currentPointer);
   CPU::setRegister(ip, currentPointer + 1);
   return split(pointer);
 }
