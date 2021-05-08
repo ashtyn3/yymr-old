@@ -11,6 +11,9 @@ EXECUTABLE := main
 
 all: $(BIN)/$(EXECUTABLE)
 
+print-%:
+	@echo '$*'='$($*)'
+
 run: clean all
 	clear
 	@echo "Executing..."
