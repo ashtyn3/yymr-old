@@ -9,13 +9,18 @@ void MemoryMapper::map(MemoryDevice *device, uint16_t start, uint16_t end,
 
 MemoryRange MemoryMapper::find(uint16_t address) {
   MemoryRange found;
-  for (int i = 0; i < MemoryMapper::ranges.size(); i++) {
+  std::cout << std::hex << address << std::endl;
+  for (int i = 0; i < ranges.size(); i++) {
     MemoryRange reg = ranges[i];
+    // std::cout << "0x" << std::hex << address << ": " << std::boolalpha
+    //<< (address >= reg.start) << std::endl;
+    // std::cout << "0x" << std::hex << address << ": " << std::boolalpha
+    //<< (address <= reg.end) << std::endl;
     if (address >= reg.start && address <= reg.end) {
       found = reg;
+      break;
     }
   }
-
   return found;
 }
 

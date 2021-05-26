@@ -117,7 +117,6 @@ uint8_t CPU::execute(uint8_t current) {
     uint8_t regFrom = fetch();
     uint16_t address = fetch16();
     uint16_t value = CPU::getRegister(regFrom);
-    // uint8_t chunks = split(value);
     memory.setUint16(address, value);
     break;
   }
